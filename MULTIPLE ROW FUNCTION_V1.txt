@@ -1,0 +1,295 @@
+-----------------------------------------------------------
+--SQL Single-Row Functions_V1
+-----------------------------------------------------------
+--1.Display the customer number, first name in lowercase and last name
+--in uppercase for all customers whose customer number is in the range of 80 and 150.
+
+SELECT CUSTOMER_ID, LOWER(FIRST_NAME), UPPER(LAST_NAME)
+FROM CUSTOMERS 
+WHERE CUSTOMER_ID BETWEEN 80 AND 150;
+
+--2.Generating Email Addresses 
+--a.For all customers – display the last name, first name and email address. The email address will be
+--composed from the first letter of first name concatenated with three first letters of last name concatenated with 
+--the string “@mymail.com” (For example: MANOJ KUMAR ? MKUM@mymail.com).
+
+SELECT LAST_NAME, FIRST_NAME, CONCAT(CONCAT(SUBSTR(FIRST_NAME,1,1), SUBSTR(LAST_NAME,1,3)),'@mymail.com') AS EMAIL_ADDRESS
+FROM CUSTOMERS;
+
+--b.For all customers – display the last name, first name and email address. The email address will be composed from 
+--the first letter of first name concatenated with three last letters of last name concatenated with the string “@mymail.com” 
+--(For example: MANOJ KUMAR ? MMAR@mymail.com).
+
+SELECT LAST_NAME, FIRST_NAME, CONCAT(CONCAT(SUBSTR(FIRST_NAME,1,1), SUBSTR(LAST_NAME,LENGTH(LAST_NAME)-2,3)),'@mymail.com') AS EMAIL_ADDRESS
+FROM CUSTOMERS;
+
+--3.Display the last name and the length of the last name for all customers where last name’s length is greater than 9 characteRS
+SELECT LAST_NAME, LENGTH(LAST_NAME)
+FROM CUSTOMERS
+WHERE LENGTH(LAST_NAME) > 9;
+
+--4.	Phone Numbers : 
+--a.Display the first name, last name, main phone number and a new phone number using the REPLACE function.
+--In the new phone number replace all occurrences of “515” with “$$$”.
+
+SELECT LAST_NAME, FIRST_NAME, MAIN_PHONE_NUM, REPLACE(MAIN_PHONE_NUM,'515','$$$') AS NEW_PHONE_NUMBER
+FROM CUSTOMERS;
+
+--b.Display the first name, last name, main phone number and new phone number using the REPLACE function. 
+--In the new phone number replace all prefixes of “515” with “$$$” (only if the first 3 digits of the 
+--phone number contains the digits “515” replace those digits with “$$$”).
+
+SELECT LAST_NAME, FIRST_NAME, MAIN_PHONE_NUM, REPLACE(SUBSTR(MAIN_PHONE_NUM,1,3),'515','$$$')||SUBSTR(MAIN_PHONE_NUM,4,12) AS NEW_PHONE_NUMBER
+FROM CUSTOMERS;
+
+--5.	From customers table, for all customers, display : 
+--a.	first name.
+--b.	monthly discount.
+--c.	monthly discount after addition of 19.7%.
+--d.	monthly discount after addition of 19.7%, expressed as a whole number (ROUND).
+--e.	monthly discount after addition of 19.7%, round down to the nearest whole number (FLOOR).
+--f.	monthly discount after addition of 19.7%, round up to the nearest whole number (CEILING).
+
+
+SELECT FIRST_NAME FROM CUSTOMERS;
+
+SELECT MONTHLY_DISCOUNT FROM CUSTOMERS;
+
+SELECT MONTHLY_DISCOUNT*1.197 FROM CUSTOMERS;
+
+SELECT ROUND(MONTHLY_DISCOUNT*1.197) FROM CUSTOMERS;
+
+SELECT FLOOR(MONTHLY_DISCOUNT*1.197) FROM CUSTOMERS;
+
+SELECT CEIL(MONTHLY_DISCOUNT*1.197) FROM CUSTOMERS;
+
+--6.From Customers table, for all customers, display the first name, join date, join date minus 10 days, join date plus one
+--month and the date difference between join date and current date.
+
+SELECT FIRST_NAME , JOIN_DATE, JOIN_DATE - 10, ADD_MONTHS(JOIN_DATE,1),TRUNC(SYSDATE - JOIN_DATE) AS DATE_DIFF_IN_DAYS
+FROM CUSTOMERS;
+
+--7.Display the first name, birthdate and age for all customers whose older than 50.
+SELECT FIRST_NAME, BIRTH_DATE, EXTRACT(YEAR FROM SYSDATE)- EXTRACT(YEAR FROM BIRTH_DATE) AS AGE
+FROM CUSTOMERS
+WHERE EXTRACT(YEAR FROM SYSDATE)- EXTRACT(YEAR FROM BIRTH_DATE) > 50;
+
+--8.Display all the data from Customers table, for all customers whose birthdate is today.
+
+SELECT * FROM CUSTOMERS 
+WHERE EXTRACT(DAY FROM SYSDATE) = EXTRACT(DAY FROM BIRTH_DATE) AND EXTRACT(MONTH FROM SYSDATE) = EXTRACT(MONTH FROM BIRTH_DATE);
+
+--9.Display the first name, join date and the difference in years between join date and current date for all customers where
+--today have passed exactly 5 years since they joined the company.
+
+SELECT FIRST_NAME, JOIN_DATE , EXTRACT(YEAR FROM SYSDATE)- EXTRACT(YEAR FROM JOIN_DATE) AS YEARS_DIFF
+FROM CUSTOMERS
+WHERE EXTRACT(YEAR FROM SYSDATE)- EXTRACT(YEAR FROM JOIN_DATE) = 10;
+
+--10.Display the first name concatenated with the join date, and last name concatenated with the monthly discount, for all customers.
+
+SELECT FIRST_NAME || '_' || JOIN_DATE, LAST_NAME || '_' || MONTHLY_DISCOUNT
+FROM CUSTOMERS;
+
+--11.	From Customers table, for all customers whose last name starts with a d or k, display: 
+--a.	last name
+--b.	state in uppercase concatenated with customer number
+--c.	join date concatenated with birthdate
+--in the WHERE clause instead of using LIKE, try to define the filtering condition using SUBSTRING.
+
+SELECT LAST_NAME FROM CUSTOMERS
+WHERE SUBSTR(LAST_NAME,1,1) = 'A' OR SUBSTR(LAST_NAME,1,1) = 'D' OR SUBSTR(LAST_NAME,1,1) = 'K' ;
+
+SELECT CONCAT(UPPER(STATE),MAIN_PHONE_NUM) FROM CUSTOMERS
+WHERE SUBSTR(LAST_NAME,1,1) = 'A' OR SUBSTR(LAST_NAME,1,1) = 'D' OR SUBSTR(LAST_NAME,1,1) = 'K' ;
+
+SELECT CONCAT(JOIN_DATE,BIRTH_DATE) FROM CUSTOMERS
+WHERE SUBSTR(LAST_NAME,1,1) = 'A' OR SUBSTR(LAST_NAME,1,1) = 'D' OR SUBSTR(LAST_NAME,1,1) = 'K' ;
+
+--12.Phone numbers report: 
+--a.Display the first name, last name, birth date, main phone number and secondary phone number for all 
+--customers whose package number equals 27. Replace every null value in main phone number or in secondary phone number with ‘N/A’.
+SELECT FIRST_NAME, LAST_NAME, BIRTH_DATE, NVL(MAIN_PHONE_NUM,'N/A'), NVL(SECONDARY_PHONE_NUM,'N/A')
+FROM CUSTOMERS
+WHERE PACK_ID = 27;
+
+--b.Display the first name, last name, birth date, main phone number, secondary phone number for all customers who was born on 1972. 
+--Replace every null value in main phone number or in secondary phone number with ‘N/A’.
+SELECT FIRST_NAME, LAST_NAME, NVL(MAIN_PHONE_NUM,'N/A'), NVL(SECONDARY_PHONE_NUM,'N/A')
+FROM CUSTOMERS
+WHERE  EXTRACT(YEAR FROM BIRTH_DATE) = '1972';
+
+--13.From Customers table, for all customers, display the first name, last name, monthly discount and
+--a discount grade based on these conditions : 
+--a.	If the discount is between 0 and 10 – discount grade level is A.
+--b.	If the discount is between 11 and 20 – discount grade level is B.
+--c.	If the discount is between 21 and 30 – discount grade level is C.
+--d.	for any other value – discount grade level is D.
+
+SELECT FIRST_NAME, LAST_NAME, MONTHLY_DISCOUNT,
+CASE 
+WHEN MONTHLY_DISCOUNT BETWEEN 0 AND 10 THEN 'A'
+WHEN MONTHLY_DISCOUNT BETWEEN 11 AND 20 THEN 'B'
+WHEN MONTHLY_DISCOUNT BETWEEN 21 AND 30 THEN 'C'
+ELSE 'D' 
+END 
+AS DISCOUNT_GRADE
+FROM CUSTOMERS;
+
+---------------------------------------------------
+--SQL Multi Row Function
+--Aggregate Functions
+--------------------------------------------------
+
+--1.	Display the lowest last name alphabetically (Customers table).
+--2.	Display the average monthly payment (Packages table).
+--3.	Display the highest last name alphabetically (Customers table).
+--4.	Display the number of internet packages (Packages table).
+--5.	Display the number of records in Customers table.
+
+SELECT MIN(FIRST_NAME)
+FROM CUSTOMERS;
+
+SELECT AVG(MONTHLY_PAYMENT)
+FROM PACKAGES;
+
+SELECT MAX(LAST_NAME)
+FROM CUSTOMERS;
+
+SELECT COUNT(PACK_ID)
+FROM PACKAGES;
+
+SELECT COUNT(CUSTOMER_ID)
+FROM CUSTOMERS;
+
+--6.	Display the number of distinct states (Customers table).
+--7.	Display the number of distinct internet speeds (Packages table).
+--8.	Display the number of values (exclude Nulls) in Fax column (Customers table).
+--9.	Display the number of Null values in Fax column (Customers table).
+--10.	Display the highest, lowest and average monthly discount (Customers table).
+
+SELECT COUNT (DISTINCT STATE) FROM CUSTOMERS;
+
+SELECT COUNT(DISTINCT SPEED)
+FROM PACKAGES;
+
+SELECT COUNT (DISTINCT FAX) 
+FROM CUSTOMERS;
+
+SELECT COUNT (*) - COUNT(FAX)
+FROM CUSTOMERS;
+
+SELECT MAX(MONTHLY_DISCOUNT), MIN(MONTHLY_DISCOUNT), AVG(MONTHLY_DISCOUNT)
+FROM CUSTOMERS;
+
+--11.	Display the state and the number of customers for each state (Customers table).
+
+SELECT STATE, COUNT(*)
+FROM CUSTOMERS
+GROUP BY STATE;
+
+--12.	Display the internet speed and the average monthly payment for each speed (Packages table).
+
+SELECT SPEED, AVG(MONTHLY_PAYMENT)
+FROM PACKAGES
+GROUP BY SPEED;
+
+--13.	Display the state and the number of distinct cities for each state (Customers table).
+
+SELECT STATE, COUNT(DISTINCT  CITY)
+FROM CUSTOMERS
+GROUP BY STATE;
+
+--14.	Display the sector number and the highest monthly payment for each sector (Packages table).
+
+SELECT SECTOR_ID , MAX(MONTHLY_PAYMENT) 
+FROM PACKAGES
+GROUP BY SECTOR_ID;
+
+--15.	Package number and average monthly discount (Customers table) – 
+--a.	Display the package number and the average monthly discount for each package.
+--b.	Display the package number and the average monthly discount for each package, only for packages whose number equals 22 or 13.
+
+SELECT PACK_ID, AVG(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+GROUP BY PACK_ID;
+
+SELECT PACK_ID, AVG(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+WHERE PACK_ID IN (22,13)
+GROUP BY PACK_ID;
+
+--16.Display the highest, lowest and average monthly payment for each internet speed (Packages table).
+
+SELECT SPEED,MAX(MONTHLY_PAYMENT), MIN(MONTHLY_PAYMENT), AVG(MONTHLY_PAYMENT)
+FROM PACKAGES
+GROUP BY SPEED;
+
+--17.	The number of customer in each internet package (Customers table) – 
+--a.	Display the package number and the number of customers for each package number.
+--b.	Modify the query to display the package number and number of customers for each package number,
+--only for the customers whose monthly discount is greater than 20.
+--c.	Modify the query to display the package number and number of customers for each package number,
+--only for the packages with more than 100 customers.
+
+SELECT PACK_ID, COUNT(CUSTOMER_ID)
+FROM CUSTOMERS
+GROUP BY PACK_ID;
+
+SELECT PACK_ID, COUNT(CUSTOMER_ID)
+FROM CUSTOMERS
+WHERE MONTHLY_DISCOUNT >20
+GROUP BY PACK_ID;
+
+SELECT PACK_ID, COUNT(CUSTOMER_ID)
+FROM CUSTOMERS
+GROUP BY PACK_ID
+HAVING COUNT(CUSTOMER_ID) >100;
+
+--18.	Display the state, city and number of customers for each state and city.
+
+SELECT STATE, CITY, COUNT(CUSTOMER_ID)
+FROM CUSTOMERS
+GROUP BY STATE, CITY;
+
+--19.	Cities and the average monthly discount (Customers table) – 
+--a.	Display the city and the average monthly discount for each city
+--b.	Display the city and the average monthly discount for each city, only for the 
+--customers whose monthly discount is greater than 20
+
+SELECT CITY, AVG(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+GROUP BY CITY;
+
+SELECT CITY, AVG(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+WHERE MONTHLY_DISCOUNT>20
+GROUP BY CITY;
+
+-- 20.	States and the lowest monthly discount (Customers table) – 
+--a.	Display the state and the lowest monthly discount for each state.
+--b.	Display the state and lowest monthly discount for each state, only for states where the lowest monthly discount is greater than 10
+
+SELECT STATE, MIN(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+GROUP BY STATE;
+
+SELECT STATE, MIN(MONTHLY_DISCOUNT)
+FROM CUSTOMERS
+GROUP BY STATE
+HAVING MIN(MONTHLY_DISCOUNT) >10;
+
+--21.	Display the internet speed and number of package for each internet speed, only for the internet speeds with more than 8 packages.
+
+SELECT SPEED, COUNT(PACK_ID)
+FROM PACKAGES
+GROUP BY SPEED
+HAVING COUNT(PACK_ID)>8 ;
+
+
+
+
+
+
+
+

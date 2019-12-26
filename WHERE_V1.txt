@@ -1,0 +1,139 @@
+-----------------------------------------------------------
+--SQL WHERE CLAUSE QUERY
+----------------------------------------------------------
+--1.Display the first name, last name, and package number for all customers whose last name is “King” (Customers table).
+SELECT FIRST_NAME, LAST_NAME, PACK_ID
+FROM CUSTOMERS
+WHERE LAST_NAME = 'King';
+
+--2.	Display all the data from Packages table for packages whose speed is “5Mbps”.
+SELECT * FROM PACKAGES
+WHERE SPEED = '5Mbps';
+
+--3.Display the first name, last name, package number and monthly discount for all customers
+--with monthly discount less than 30 (Customers table).
+SELECT FIRST_NAME, LAST_NAME, PACK_ID, MONTHLY_DISCOUNT
+FROM CUSTOMERS
+WHERE MONTHLY_DISCOUNT<30;
+
+--4.Display all the data from Customers table for all customers who joined the company before January 1st, 2007.
+SELECT * FROM CUSTOMERS
+WHERE JOIN_DATE < '01-JAN-2007';
+
+--5.Display the customer number, first name ,state, city and package number for all customers whose package 
+--number equals 7,21, 28, or 14 (Customers table).
+SELECT FIRST_NAME, LAST_NAME, STATE, CITY, PACK_ID
+FROM CUSTOMERS
+WHERE PACK_ID IN (7,21,28,14);
+
+--6.Display the customer number, first name ,state, city and package number for all customers whose package 
+--number is not equal to 27, 10, or 3 (Customers table).
+SELECT FIRST_NAME, LAST_NAME, STATE, CITY, PACK_ID
+FROM CUSTOMERS
+WHERE PACK_ID NOT IN (27,10,3);
+
+--7.Display the last name, main phone number, monthly discount and package number for all customers 
+--whose customer number equals 703, 314 or 560 (Customers table).
+SELECT LAST_NAME, MAIN_PHONE_NUM, MONTHLY_DISCOUNT, PACK_ID
+FROM CUSTOMERS
+WHERE CUSTOMER_ID IN (703,314,560);
+
+--8.Display the first name and monthly discount for all customers whose first name ends with an e (Customers table).
+SELECT FIRST_NAME, MONTHLY_DISCOUNT
+FROM CUSTOMERS
+WHERE FIRST_NAME LIKE '%e';
+
+--9.Display the last name and package number for all customers where the second letter of their last name is d (Customers table).
+SELECT LAST_NAME , PACK_ID
+FROM CUSTOMERS
+WHERE LAST_NAME LIKE '_d%';
+
+--10.Display all the data from Customers table for all customers who have the letters:  l, j or h in their last name.
+--Order the query in descending order by monthly discount (Customers table).
+
+SELECT * FROM CUSTOMERS
+WHERE LAST_NAME LIKE '%l%' OR LAST_NAME LIKE '%j%' OR LAST_NAME LIKE '%h%'
+ORDER BY MONTHLY_DISCOUNT DESC;
+
+--11.Display the first name, join date, monthly discount and package number for all customers who don’t have the letter a
+--in their last name. Order the query in ascending order by package number (Customers table).
+SELECT FIRST_NAME, JOIN_DATE, MONTHLY_DISCOUNT, PACK_ID
+FROM CUSTOMERS 
+WHERE LAST_NAME NOT LIKE '%a%'
+ORDER BY PACK_ID ASC;
+
+--12.Display all data from Customers table for all customers without a package (package number is null)
+SELECT * FROM CUSTOMERS
+WHERE PACK_ID IS NULL;
+
+--13.	Display the first name concatenated with the last name (separated by space), and monthly discount for all customers
+--whose monthly discount is not in the range between 20 and 30.Order the query in ascending order by the full name (Customers table).
+SELECT  FIRST_NAME || ' ' || LAST_NAME AS FULL_NAME, MONTHLY_DISCOUNT
+FROM CUSTOMERS
+WHERE MONTHLY_DISCOUNT NOT BETWEEN 20 AND 30
+ORDER BY FULL_NAME ASC;
+
+--14.	Display the first name concatenated with the last name (separated by space), 
+--the main phone number concatenated with street (separated by space), and monthly discount for all customers 
+--whose monthly discount is in the range between 11 and 27.
+--Name the column headings FULL_NAME, CONTACTS, and DC respectively (Customers table).
+
+SELECT  FIRST_NAME || ' ' || LAST_NAME AS FULL_NAME, MAIN_PHONE_NUM || ' '|| STREET AS CONTACTS, MONTHLY_DISCOUNT AS DC
+FROM CUSTOMERS 
+WHERE MONTHLY_DISCOUNT BETWEEN 11 AND 27;
+
+--15.	Display all data from Customers table for : 
+--a.	All customers who live in New York and whose monthly discount is in the range between 30 and 40 or
+--b.	All customers whose package number is not 8,19, or 30 and whose join date is before January 1st, 2007
+
+SELECT * FROM CUSTOMERS
+WHERE (STATE = 'New York' AND MONTHLY_DISCOUNT BETWEEN 30 AND 40) OR (PACK_ID NOT IN(8,29,30) AND JOIN_DATE <  '01-JAN-2007' )
+
+--16.Display the last name, package number, and birthdate for all customers whose join date is in the range 
+--between December 12th, 2007 and April 17th, 2010 (Customers table).
+SELECT LAST_NAME, PACK_ID, BIRTH_DATE
+FROM CUSTOMERS
+WHERE JOIN_DATE BETWEEN '12-DEC-2007' AND '17-APR-2010';
+
+--17.Display the package number, start date, and speed for all packages whose start date is before January 1st, 2007 (Packages table)
+SELECT PACK_ID, STRT_DATE, SPEED
+FROM PACKAGES
+WHERE STRT_DATE <  '01-JAN-2007';
+
+--18.Display the package number, speed, and sector number for all packages whose sector number equals 1 (Packages table).
+SELECT PACK_ID, SPEED, SECTOR_ID
+FROM PACKAGES 
+WHERE SECTOR_ID = 1;
+
+--19.Display the package number, speed and sector number for all packages with internet speed of “5Mbps” or “10Mbps” (Packages table).
+SELECT PACK_ID, SPEED, SECTOR_ID
+FROM PACKAGES 
+WHERE SPEED = '5Mbps' OR SPEED = '10Mbps';
+
+--20.Display the last name and monthly discount for all customers live in Orlando (Customers table).
+SELECT LAST_NAME, MONTHLY_DISCOUNT
+FROM CUSTOMERS 
+WHERE CITY = 'Orlando';
+--21.Display the last name and package number for all customers whose package number equals 9 or 18. 
+--Preform the exercise once using IN operator, once using OR (Customers table).
+
+SELECT LAST_NAME, PACK_ID
+FROM CUSTOMERS 
+WHERE PACK_ID IN (9,18);
+
+SELECT LAST_NAME, PACK_ID
+FROM CUSTOMERS 
+WHERE PACK_ID = 9 OR PACK_ID = 18;
+
+--22.Display the first name, main phone number and secondary phone number for all customers without
+--a secondary phone number (secondary phone number is null).
+
+SELECT FIRST_NAME, MAIN_PHONE_NUM,SECONDARY_PHONE_NUM
+FROM CUSTOMERS 
+WHERE SECONDARY_PHONE_NUM IS NULL;
+
+--23.Display the first name, monthly discount and package id for all customers without any monthly discount (monthly discount is null).
+
+SELECT FIRST_NAME, MONTHLY_DISCOUNT, PACK_ID
+FROM CUSTOMERS 
+WHERE MONTHLY_DISCOUNT IS NULL;

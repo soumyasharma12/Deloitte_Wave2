@@ -1,0 +1,102 @@
+------------------------------------------------------------------
+--SQL NESTED QUERIES
+--------------------------------------------------------------
+
+--1.Display the first name, last name, city and state for all customers who live in the same state as customer number 170 (Customers table).
+SELECT FIRST_NAME, LAST_NAME, CITY 
+FROM CUSTOMERS 
+WHERE STATE = (SELECT STATE FROM CUSTOMERS WHERE CUSTOMER_ID= 170);
+
+--2.Display the package number, internet speed and sector number for all packages whose sector number equals to the sector number of 
+--package number 10 (Packages table).
+SELECT PACK_ID, SPEED, SECTOR_ID
+FROM PACKAGES
+WHERE SECTOR_ID = (SELECT SECTOR_ID FROM PACKAGES WHERE PACK_ID = 10);
+
+--3.Display the first name, last name and join date for all customers who joined the company after customer number 540 (Customers table).
+
+SELECT FIRST_NAME, LAST_NAME, JOIN_DATE
+FROM CUSTOMERS 
+WHERE JOIN_DATE> (SELECT JOIN_DATE FROM CUSTOMERS WHERE CUSTOMER_ID = 540);
+
+
+--4.Display the first name, last name and join date for all customers who joined the company on the same month and on the
+--same year as customer number 372 (Customers table).
+
+SELECT FIRST_NAME, LAST_NAME, JOIN_DATE
+FROM CUSTOMERS 
+WHERE EXTRACT(YEAR FROM JOIN_DATE) = (SELECT EXTRACT(YEAR FROM JOIN_DATE) FROM CUSTOMERS WHERE CUSTOMER_ID = 372)
+AND EXTRACT(MONTH FROM JOIN_DATE) = (SELECT EXTRACT(MONTH FROM JOIN_DATE) FROM CUSTOMERS WHERE CUSTOMER_ID = 372);
+
+--5.Display the first name, last name, city, state and package number for all customers whose internet speed 
+--is “5Mbps” (Customers and Packages table).
+SELECT FIRST_NAME, LAST_NAME, CITY,STATE, PACK_ID
+FROM CUSTOMERS 
+WHERE PACK_ID IN (SELECT PACK_ID FROM PACKAGES WHERE SPEED = '5Mbps');
+
+--6.Display the package number, internet speed and strt_date (the date it became available) for all packages who became available 
+--on the same year as package number 7 (Packages table).
+
+SELECT PACK_ID, SPEED, STRT_DATE
+FROM PACKAGES
+WHERE PACK_ID IN (SELECT PACK_ID FROM PACKAGES WHERE EXTRACT(YEAR FROM STRT_DATE)  = 
+(SELECT EXTRACT(YEAR FROM STRT_DATE) FROM PACKAGES WHERE PACK_ID =7));
+
+--7.Display the first name, monthly discount, package number, main phone number and secondary phone number for all customers 
+--whose sector name is Business (Customers, Packages and Sectors tables).
+
+SELECT FIRST_NAME, MONTHLY_DISCOUNT, PACK_ID, MAIN_PHONE_NUM,SECONDARY_PHONE_NUM
+FROM CUSTOMERS
+WHERE PACK_ID IN (SELECT PACK_ID FROM PACKAGES WHERE SECTOR_ID = (SELECT SECTOR_ID FROM SECTORS WHERE SECTOR_NAME = 'Business'));
+
+--8.Display the first name, monthly discount and package number for all customers whose monthly payment is greater than 
+--the average monthly payment (Customers and Packages table).
+
+SELECT FIRST_NAME, MONTHLY_DISCOUNT, PACK_ID
+FROM CUSTOMERS
+WHERE PACK_ID IN( SELECT PACK_ID FROM PACKAGES WHERE MONTHLY_PAYMENT> (SELECT AVG(MONTHLY_PAYMENT)FROM PACKAGES));
+
+--9.Display the first name, city, state, birthdate and monthly discount for all customers who was born on the same 
+--date as customer number 179,and whose monthly discount is greater than the monthly discount of customer number 107 (Customers table)
+
+SELECT FIRST_NAME, CITY, STATE, BIRTH_DATE, MONTHLY_DISCOUNT
+FROM CUSTOMERS
+WHERE BIRTH_DATE = (SELECT BIRTH_DATE FROM CUSTOMERS WHERE CUSTOMER_ID = 179)
+AND MONTHLY_DISCOUNT > (SELECT MONTHLY_DISCOUNT FROM CUSTOMERS WHERE CUSTOMER_ID = 107);
+
+--10.Display all the data from Packages table for packages whose internet speed equals to the internet speed of package number 30,
+--and whose monthly payment is greater than the monthly payment of package number 7 (Packages table).
+
+SELECT * 
+FROM PACKAGES
+WHERE SPEED = (SELECT SPEED FROM PACKAGES WHERE PACK_ID = 30)
+AND MONTHLY_PAYMENT > (SELECT MONTHLY_PAYMENT FROM PACKAGES WHERE PACK_ID = 7);
+
+--11.Display the package number, internet speed, and monthly payment for all packages whose monthly payment is greater than
+--the maximum monthly payment of packages with internet speed equals to “5Mbps” (Packages table).
+
+SELECT PACK_ID, SPEED, MONTHLY_PAYMENT
+FROM PACKAGES
+WHERE MONTHLY_PAYMENT >(SELECT MAX(MONTHLY_PAYMENT) FROM PACKAGES WHERE SPEED = '5Mbps');
+
+--12.Display  the package number, internet speed and monthly payment for all packages whose monthly payment is greater than 
+--the minimum monthly payment of packages with internet speed equals to “5Mbps” (Packages table).
+SELECT PACK_ID, SPEED, MONTHLY_PAYMENT
+FROM PACKAGES
+WHERE MONTHLY_PAYMENT >(SELECT MIN(MONTHLY_PAYMENT) FROM PACKAGES WHERE SPEED = '5Mbps');
+
+--13.	Display the package number, internet speed and monthly payment for all packages whose monthly payment is lower than the
+--minimum monthly payment of packages with internet speed equals to “5Mbps” (Packages table).
+SELECT PACK_ID, SPEED, MONTHLY_PAYMENT
+FROM PACKAGES
+WHERE MONTHLY_PAYMENT <(SELECT MIN(MONTHLY_PAYMENT) FROM PACKAGES WHERE SPEED = '5Mbps');
+
+--14.Display the first name, monthly discount and package number for all customers whose monthly discount is lower than the 
+--average monthly discount, and whose package number is the same as customer named “Kevin”
+SELECT FIRST_NAME , MONTHLY_DISCOUNT, PACK_ID
+FROM CUSTOMERS
+WHERE CUSTOMER_ID IN (SELECT CUSTOMER_ID FROM CUSTOMERS WHERE MONTHLY_DISCOUNT < (SELECT AVG(MONTHLY_DISCOUNT) FROM CUSTOMERS))
+AND PACK_ID IN (SELECT PACK_ID FROM CUSTOMERS WHERE FIRST_NAME = 'Kevin') ;
+
+
+
