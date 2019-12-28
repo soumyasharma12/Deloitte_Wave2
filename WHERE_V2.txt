@@ -1,0 +1,135 @@
+-----------------------------------------
+--SQL WHERE  V2
+-----------------------------------------
+
+--1.	Display the first name and department number for all customers whose last name is “De Haan” (Employees table).
+
+SELECT FIRST_NAME, DEPARTMENT_ID FROM TBLEMPLOYEES
+WHERE LAST_NAME = 'De Haan';
+
+--2.	Display all data from Departments table for Sales department (department_name column).
+SELECT * FROM TBLDEPARTMENTS
+WHERE DEPARTMENT_NAME = 'Sales';
+
+
+--3.	Display the first name, last_name, department number and salary for all employees who earn more than 9700 (Employees table).
+SELECT FIRST_NAME, LAST_NAME, DEPARTMENT_ID, SALARY
+FROM TBLEMPLOYEES
+WHERE SALARY> 9700;
+
+--4.	Display all data from Employees table for all employees who was hired before January 1st, 1992.
+
+SELECT * FROM TBLEMPLOYEES 
+WHERE HIRE_DATE < '01-JAN-1992';
+
+
+--5.Display the employee number, first name, job id and department number for all employees whose department number 
+--equals 20, 60 or 80 (Employees table).
+
+SELECT EMPLOYEE_ID, FIRST_NAME, JOB_ID, DEPARTMENT_ID
+FROM TBLEMPLOYEES
+WHERE DEPARTMENT_ID IN (20,60,80);
+
+--6.Display the employee number, first name, job id and department number for all employees whose department number is 
+--not equal to 20, 60 and 80 (Employees table).
+
+SELECT EMPLOYEE_ID, FIRST_NAME, JOB_ID, DEPARTMENT_ID
+FROM TBLEMPLOYEES
+WHERE DEPARTMENT_ID NOT IN (20,60,80);
+
+--7.Display the last name, phone number, salary and manager number, for all employees whose manager number equals 
+--100, 102 or 103 (Employees table).
+
+SELECT LAST_NAME, PHONE_NUMBER, SALARY, MANAGER_ID 
+FROM TBLEMPLOYEES
+WHERE MANAGER_ID IN (100,102,103);
+
+--8.Display the first name and salary for all employees whose first name ends with an e (Employees table).
+
+SELECT FIRST_NAME, SALARY FROM TBLEMPLOYEES
+WHERE FIRST_NAME LIKE '%e';
+
+--9.Display the last name and department number for all employees where the second letter in their last name is i (Employees table).
+SELECT LAST_NAME, DEPARTMENT_ID FROM TBLEMPLOYEES
+WHERE LAST_NAME LIKE'_i%';
+
+--10.Display all data from Employees table for all employees who have the letters : L, J, or H in their last name. 
+--Sort the query in descending order by salary.
+
+SELECT * FROM TBLEMPLOYEES 
+WHERE LAST_NAME LIKE '%l%' OR LAST_NAME LIKE '%j%' OR LAST_NAME LIKE '%h%'
+OR LAST_NAME LIKE 'J%' OR LAST_NAME LIKE 'L%' OR LAST_NAME LIKE 'H%'
+ORDER BY SALARY DESC;
+
+--11.	Display the first name, hire date, salary and department number for all employees whose first name doesn’t have the letter A.
+--Sort the query in ascending order by department number (Employees table).
+
+SELECT FIRST_NAME, HIRE_DATE, SALARY, DEPARTMENT_ID
+FROM TBLEMPLOYEES 
+WHERE FIRST_NAME NOT LIKE '%a%' AND FIRST_NAME NOT LIKE 'A%'
+ORDER BY DEPARTMENT_ID ASC;
+
+--12.	Display all data from Employees table for all employees without any department number.
+SELECT * FROM TBLEMPLOYEES
+WHERE DEPARTMENT_ID IS NULL;
+
+--13.	Display the first name concatenated with the last name, separated by comma, and salary, for all employees whose salary not 
+--in the range between 7000 and 15000. Sort the query in ascending order by the full name (Employees table).
+
+SELECT FIRST_NAME || ',' || LAST_NAME AS FULL_NAME , SALARY
+FROM TBLEMPLOYEES
+WHERE SALARY NOT BETWEEN 7000 AND 15000
+ORDER BY FULL_NAME ASC; 
+
+--14.	Display the first name concatenated with the last name, separated by comma, the phone number concatenated with the
+--email address, separated by hyphen, and salary, for all employees whose salary is in the range of 5000 and 10000. 
+--Name the column headings: “FULL_NAME”, “CONTACTS” and “SAL” respectively (Employees table).
+SELECT FIRST_NAME || ',' || LAST_NAME AS FULL_NAME , PHONE_NUMBER || '-' || EMAIL AS CONTACT_DETAILS, SALARY AS SAL
+FROM TBLEMPLOYEES
+WHERE SALARY BETWEEN 5000 AND 10000;
+
+--15.	Display all data from Employees table for all employees whose:
+--salary is in the range of 6000 and 8000 and their commission is not null or
+--department number is not equal to 80, 90 and 100 and their hire date is before January 1st, 1990.
+
+SELECT *
+FROM TBLEMPLOYEES
+WHERE  ((SALARY BETWEEN 6000 AND 8000) AND COMMISSION_PCT IS NOT NULL) OR
+((DEPARTMENT_ID <> 80 AND DEPARTMENT_ID <> 90 AND DEPARTMENT_ID <> 100) AND HIRE_DATE< '01-JAN-1990');
+
+--16.	Display last name, job id and hire date for all employees who was hired during December 12th, 1995 and April 17th, 1998.
+
+SELECT LAST_NAME, JOB_ID, HIRE_DATE  FROM TBLEMPLOYEES
+WHERE HIRE_DATE BETWEEN '12-DEC-1995' AND '17-APR-1998';
+
+--17.	Display the first name concatenated with last name, hire date, commission percentage, telephone, 
+--and salary for all employees whose salary is greater than 10000 or the third digit in their phone number equals 5.
+--Sort the query in a descending order by the first name (Employees table).
+
+SELECT FIRST_NAME || ',' || LAST_NAME AS FULL_NAME, HIRE_DATE, COMMISSION_PCT, PHONE_NUMBER, SALARY 
+FROM TBLEMPLOYEES 
+WHERE SALARY > 10000 OR PHONE_NUMBER LIKE '__5%'
+ORDER BY FIRST_NAME DESC;
+
+
+--18.	Display the last name and salary for all employees who earn more than 12000 (Employees table).
+SELECT LAST_NAME, SALARY FROM TBLEMPLOYEES
+WHERE SALARY> 12000;
+
+--19.	Display the last name and department number for all employees whose department number is equal to 50 or 80.
+--Perform this exercise once by using the IN operator, once by using the OR operator.
+SELECT LAST_NAME, DEPARTMENT_ID FROM TBLEMPLOYEES
+WHERE DEPARTMENT_ID IN (50,80);
+
+SELECT LAST_NAME, DEPARTMENT_ID FROM TBLEMPLOYEES
+WHERE DEPARTMENT_ID = 50 OR DEPARTMENT_ID = 50;
+
+
+--20.	Display the first name and salary for all employees who doesn’t earn any commission.
+SELECT FIRST_NAME, SALARY FROM TBLEMPLOYEES
+WHERE COMMISSION_PCT IS NULL;
+
+--21.	Display the first name, salary, and manager number for all employees whose manager number is not null.
+SELECT FIRST_NAME, SALARY, MANAGER_ID 
+FROM TBLEMPLOYEES
+WHERE MANAGER_ID IS NOT NULL;

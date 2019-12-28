@@ -1,0 +1,66 @@
+------------------------------------------------------------------------------------
+--Basic SELECT statements – Exercises_V2
+------------------------------------------------------------------------------------
+
+--1.Create a query to display all the data from the Employees table.
+SELECT * FROM TBLEMPLOYEES;
+
+--2.	The following SELECT statement executes successfully (True / False)
+	FROM employees
+    --FALSE
+   SELECT last_name, first_name
+   --FALSE
+   
+--3.Create a query to display the department number, department name, and manager number.
+--Name the last column (manager number) heading as “MNG” (Employees table).
+
+SELECT DEPARTMENT_ID, DEPARTMENT_NAME, MANAGER_ID AS MNG
+FROM   TBLDEPARTMENTS;
+
+--4.	The following SELECT statement executes successfully (True / False)
+--TRUE
+SELECT department_name, department_name
+FROM TBLDEPARTMENTS;
+--5.The following SELECT statement executes successfully (True / False)
+	SeleCT last_NAME, fiRST_NamE, FROM TBLEmployees; --FALSE
+
+--6.Create a query to display the employee number, first name, last name, phone number and department number (Employees table).
+SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, PHONE_NUMBER, DEPARTMENT_ID
+FROM TBLEMPLOYEES;
+
+--7.Create a query to display the first name, last name, hire date, salary, and salary after a raise of 20%.
+--Name the last column (salary after a raise) heading as “ANNUAL_SAL” (Employees table).
+SELECT FIRST_NAME, LAST_NAME, HIRE_DATE, SALARY, SALARY *1.2 AS ANNUAL_SAL
+FROM TBLEMPLOYEES;
+
+--8.Create a query to display the last name concatenated with the first name, separated by space,and the telephone number
+--concatenated with the email address, separated by hyphen. Name the column headings “FULL_NAME” and “CONTACT_DETAILS” 
+--respectively (Employees tables).
+
+SELECT FIRST_NAME || ' ' || LAST_NAME AS FULL_NAME, PHONE_NUMBER || '-' || EMAIL AS CONTACT_DETAILS
+FROM TBLEMPLOYEES;
+
+
+--9.Create a query to display the unique manager numbers from Employees table.
+
+SELECT DISTINCT MANAGER_ID FROM TBLEMPLOYEES;
+
+--10.	Create a query to display the last name concatenated with job_id column, separated by space. Name this column heading
+--as “EMPLOYEE_AND_TITLE” (Employees table).
+
+SELECT LAST_NAME || ' ' || JOB_ID AS EMPLOYEE_AND_TITLE FROM TBLEMPLOYEES;
+
+
+--11.	Create a query to display the first name, last name, salary, and hire date concatenated with the literal string “HD”, 
+--separated by space. Name the column headings “FN”, “LN”, “SAL”, and “HD” respectively (Employees table).
+SELECT FIRST_NAME AS FN, LAST_NAME AS LN,  SALARY AS SAL, HIRE_DATE || ' ' ||'HD' AS HD
+FROM TBLEMPLOYEES;
+
+
+--12.	Create a query to display the unique salaries in Employees tables.
+SELECT DISTINCT SALARY FROM TBLEMPLOYEES;
+
+--13.	Create a query to display the unique combination of values in department_id and job_id columns (Employees table).
+
+SELECT DISTINCT DEPARTMENT_ID, JOB_ID
+FROM TBLEMPLOYEES;
