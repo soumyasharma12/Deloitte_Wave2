@@ -1,0 +1,73 @@
+--The HR department needs a list of department IDs for departments that do not contain
+--the job ID ST_CLERK. Use the set operators to create this report.
+
+SELECT DEPARTMENT_ID FROM DEPARTMENTS
+MINUS 
+SELECT DEPARTMENT_ID FROM EMPLOYEES 
+WHERE JOB_ID = 'ST_CLERK';
+
+
+--The HR department needs a list of countries that have no departments located in
+--them. Display the country ID and the name of the countries. Use the set operators to
+--create this report
+
+/*SELECT COUNTRY_ID, COUNTRY_NAME 
+FROM COUNTRIES
+WHERE COUNTRY_ID IN (SELECT COUNTRY_ID FROM LOCATIONS WHERE LOCATION_ID IN (SELECT LOCATION_ID
+FROM LOCATIONS
+MINUS 
+SELECT LOCATION_ID
+FROM DEPARTMENTS));*/
+
+SELECT COUNTRY_ID, COUNTRY_NAME 
+FROM COUNTRIES
+MINUS
+SELECT L.COUNTRY_ID, C.COUNTRY_NAME
+FROM COUNTRIES C, LOCATIONS L, DEPARTMENTS D
+WHERE L.COUNTRY_ID = C.COUNTRY_ID
+AND D.LOCATION_ID = L.LOCATION_ID;
+
+
+--Produce a list of jobs for departments 10, 50, and 20, in that order. Display the job ID
+--and department ID by using the set operators.
+
+SELECT JOB_ID, DEPARTMENT_ID 
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 10 
+UNION
+SELECT JOB_ID, DEPARTMENT_ID 
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 20 
+UNION 
+SELECT JOB_ID, DEPARTMENT_ID 
+FROM EMPLOYEES
+WHERE DEPARTMENT_ID = 50
+;
+
+/*Create a report that lists the employee IDs and job IDs of those employees who
+currently have a job title that is the same as their job title when they were initially
+hired by the company (that is, they changed jobs, but have now gone back to doing
+their original job).*/
+
+SELECT EMPLOYEE_ID, JOB_ID 
+FROM EMPLOYEES
+INTERSECT 
+SELECT EMPLOYEE_ID, JOB_ID
+FROM JOB_HISTORY;
+
+/*The HR department needs a report with the following specifications:
+??Last name and department ID of all employees from the EMPLOYEES table,
+regardless of whether or not they belong to a department
+??Department ID and department name of all departments from the DEPARTMENTS
+table, regardless of whether or not they have employees working in them
+Write a compound query to accomplish this.*/
+
+SELECT LAST_NAME , DEPARTMENT_ID , TO_CHAR(NULL)
+FROM EMPLOYEES
+UNION ALL
+SELECT TO_CHAR(NULL),DEPARTMENT_ID, DEPARTMENT_NAME
+FROM DEPARTMENTS;
+
+
+
+
