@@ -1,0 +1,73 @@
+CREATE TABLE MY_EMPLOYEES
+(
+  ID NUMBER(4) NOT NULL
+, LAST_NAME VARCHAR2(25) 
+, FIRST_NAME VARCHAR2(20) 
+, USER_ID VARCHAR2(8) 
+, SALARY NUMBER(9, 2) 
+) ;
+
+DESCRIBE MY_EMPLOYEES;
+
+INSERT INTO MY_EMPLOYEES VALUES (1, 'Patel','Ralph', 'rpatel',895);
+
+INSERT INTO MY_EMPLOYEES (ID, LAST_NAME, FIRST_NAME, USER_ID, SALARY) VALUES (2, 'Dancs','Betty', 'bdancs',860);
+
+INSERT INTO MY_EMPLOYEES (ID, LAST_NAME, FIRST_NAME, USER_ID, SALARY) VALUES (&ID, '&LAST_NAME', '&FIRST_NAME', '&USER_ID', &SALARY);
+
+COMMIT;
+
+--------------------------------------------------------
+--UPDATE
+---------------------------------------------------------
+
+--10) Change the last name of employee 3 to Drexler.
+
+UPDATE MY_EMPLOYEES SET LAST_NAME = 'Drexler'
+WHERE ID = '3';
+
+--Change the salary to $1,000 for all employees who have a salary less than $900.
+UPDATE MY_EMPLOYEES SET SALARY = 1000
+WHERE SALARY <900;
+
+--13) Delete Betty Dancs from the MY_EMPLOYEE table.
+
+DELETE FROM MY_EMPLOYEES WHERE FIRST_NAME = 'Betty';
+
+COMMIT;
+SAVEPOINT S1;
+-------------------------------------------------------------------------
+
+--16) Populate the table with the last row of the sample data listed in step 3 by using the
+--statements in the script that you created in step 6. Run the statements in the script.
+
+
+--18) Mark an intermediate point in the processing of the transaction.
+--19) Delete all the rows from the MY_EMPLOYEE table.
+--20) Confirm that the table is empty.
+
+DELETE FROM MY_EMPLOYEES;
+
+--21) Discard the most recent DELETE operation without discarding the earlier INSERT
+--operation.
+
+ROLLBACK TO S1;
+
+--23) Make the data addition permanent.
+COMMIT;
+
+-------------------------------------------------------------------
+/*24) Modify the lab_09_06.sql script such that the USERID is generated automatically
+by concatenating the first letter of the first name and the first seven characters of the
+last name. The generated USERID must be in lowercase. Therefore, the script should
+not prompt for the USERID. Save this script to a file named lab_09_24.sql.*/
+
+INSERT INTO MY_EMPLOYEES (ID, LAST_NAME, FIRST_NAME, USER_ID, SALARY) VALUES 
+(&ID, '&&LAST_NAME', '&&FIRST_NAME', SUBSTR('&FIRST_NAME',1,1)|| SUBSTR('&LAST_NAME',1,7), &SALARY);
+
+
+
+
+
+
+
