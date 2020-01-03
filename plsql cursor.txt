@@ -1,0 +1,104 @@
+CREATE TABLE TOP_SALARIES(SALARY NUMBER(9));
+
+DECLARE 
+v_num number;
+sal employees.salary%type;
+CURSOR  c_emp_cursor is
+select salary from (select distinct salary from employees order by salary desc) where rownum <&vnum;
+
+BEGIN
+OPEN c_emp_cursor;
+
+LOOP
+FETCH  c_emp_cursor INTO sal ;
+EXIT WHEN c_emp_cursor%NOTFOUND;  
+insert into top_salaries values(sal);
+end loop;
+close c_emp_cursor;
+end;
+
+
+---------------------------------------------------------------------
+--2.
+
+DECLARE 
+v_sal number;
+v_lname varchar2(20);
+v_mid number;
+v_deptno number := &d_id;
+CURSOR  c_emp_cursor is
+select last_name, salary, manager_id from employees where department_id = v_deptno;
+
+BEGIN
+
+--OPEN c_emp_cursor;
+
+LOOP
+fetch c_emp_cursor into v_lname, v_sal, v_mid;
+if v_sal < 5000 and (v_mid = 101 or v_mid = 124)
+then dbms_output.put_line(v_lname|| ' ' || 'Due for a raise');
+else 
+dbms_output.put_line(v_lname|| ' ' ||'Not due for a raise');
+end if;
+exit when c_emp_cursor%notfound;
+end loop;
+close c_emp_cursor;
+end;
+
+----------------------------------------------------
+--3.
+--In a loop, use a cursor to retrieve the department number and the department name
+--from the departments table for a department whose department_id is less than 100.
+--Pass the department number to another cursor as a parameter to retrieve from the employees table the details 
+--of employee last name, job, hire date, and salary of those employees whose employee_id is less than 120 and 
+--who work in that department.
+
+
+DEFINE dept_id_constraint = 100;
+DEFINE emp_id_constraint = 120;
+
+DECLARE
+  CURSOR c_lower_depts
+    (higher_id NUMBER)
+  IS
+    SELECT department_id, department_name
+    FROM departments
+    WHERE department_id < higher_id;
+
+  CURSOR c_lower_emps_in_dept
+    (higher_emp_id NUMBER, dept_id NUMBER)
+  IS
+    SELECT e.last_name, e.job_id, j.job_title, e.hire_date, e.salary
+    FROM employees e, jobs j
+    WHERE
+      e.employee_id < higher_emp_id AND
+      e.department_id = dept_id AND
+      e.job_id = j.job_id;
+BEGIN
+  FOR v_dept IN c_lower_depts(&dept_id_constraint) LOOP
+    DBMS_OUTPUT.PUT_LINE('----------');
+    DBMS_OUTPUT.PUT(CHR(10)); -- output a newline character
+
+    DBMS_OUTPUT.PUT('Department Number: ' || v_dept.department_id);
+    DBMS_OUTPUT.PUT_LINE('; Department Name: ' || v_dept.department_name);
+
+    DBMS_OUTPUT.PUT(CHR(10));
+
+    FOR v_emp IN
+      c_lower_emps_in_dept(&emp_id_constraint, v_dept.department_id)
+    LOOP
+      DBMS_OUTPUT.PUT(v_emp.last_name || ' ');
+      DBMS_OUTPUT.PUT(v_emp.job_title || ' (' || v_emp.job_id || ') ');
+      DBMS_OUTPUT.PUT_LINE(v_emp.hire_date || ' ' || v_emp.salary);
+    END LOOP;
+
+    DBMS_OUTPUT.PUT(CHR(10));
+  END LOOP;
+END;
+/
+
+
+
+
+
+
